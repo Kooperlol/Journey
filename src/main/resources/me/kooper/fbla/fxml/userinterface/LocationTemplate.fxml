@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="444.0" prefWidth="727.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.kooper.fbla.controllers.userinterface.LocationTemplate">
+   <stylesheets>
+      <URL value="@../../css/Button.css" />
+      <URL value="@../../css/Main.css" />
+   </stylesheets>
+   <left>
+      <VBox id="gradient" alignment="TOP_CENTER" maxWidth="200.0" spacing="5.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <ImageView fitHeight="126.0" fitWidth="128.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../media/Journey.png" />
+         </ImageView>
+         <Label id="text" fx:id="name" alignment="CENTER" maxWidth="200.0" text="&lt;location&gt;" textAlignment="CENTER" textFill="WHITE" underline="true" wrapText="true">
+            <font>
+               <Font size="28.0" />
+            </font>
+         </Label>
+         <Label id="text" fx:id="address" alignment="CENTER" maxWidth="200.0" text="&lt;address&gt;" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <font>
+               <Font size="19.0" />
+            </font>
+         </Label>
+         <Button id="button" graphicTextGap="10.0" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addReview" prefHeight="37.0" prefWidth="174.0" text="Add Review" textFill="WHITE">
+            <graphic>
+               <ImageView fitHeight="24.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../../media/Add_Document.png" />
+               </ImageView>
+            </graphic>
+         </Button>
+         <Button id="button" graphicTextGap="10.0" layoutX="10.0" layoutY="49.0" mnemonicParsing="false" onAction="#saveLocation" prefHeight="37.0" prefWidth="174.0" text="Save Location" textFill="WHITE">
+            <graphic>
+               <ImageView fitHeight="24.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../../media/Cloud.png" />
+               </ImageView>
+            </graphic>
+         </Button>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </VBox>
+   </left>
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text id="text" fill="#031d20" strokeType="OUTSIDE" strokeWidth="0.0" text="Reviews">
+               <font>
+                  <Font size="47.0" />
+               </font>
+            </Text>
+            <Label fx:id="loading" text="Loading..." />
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="471.5" style="-fx-background-color: transparent;" vbarPolicy="NEVER">
+               <content>
+                  <VBox fx:id="reviewDisplay" alignment="CENTER" spacing="30.0" />
+               </content>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </ScrollPane>
+            <Hyperlink id="text" onAction="#openBrowseLocations" text="Go back to Browsing Locations" textFill="#031d20">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Hyperlink>
+            <Label fx:id="feedback" wrapText="true" />
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets left="30.0" right="30.0" top="30.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>

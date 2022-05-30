@@ -1,0 +1,36 @@
+@font-face {
+    font-family: "Lavigne";
+    src: url('../fonts/Lavigne.ttf');
+}
+
+#text {
+    -fx-font-family: "Lavigne";
+}
+
+#background {
+    -fx-background-color: #FAF9F6;
+}
+
+#success {
+    -fx-background-radius: 70px;
+    -fx-padding: 10px;
+    -fx-font-family: "Lavigne";
+    -fx-background-color: #4CBB17;
+    -fx-text-fill: white;
+}
+
+#error {
+    -fx-background-radius: 70px;
+    -fx-padding: 10px;
+    -fx-font-family: "Lavigne";
+    -fx-background-color: #B33A3A;
+    -fx-text-fill: white;
+}
+
+#gradient {
+    -fx-background-color: linear-gradient(#1876FF, #18AFFF);
+}
+
+#pane {
+    -fx-margin: auto;
+}

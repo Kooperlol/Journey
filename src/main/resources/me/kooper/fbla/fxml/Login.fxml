@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane id="background" prefHeight="657.0" prefWidth="1149.0" style="-fx-margin: auto;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.kooper.fbla.controllers.Login">
+    <stylesheets>
+        <URL value="@../css/Button.css" />
+        <URL value="@../css/Main.css" />
+    </stylesheets>
+   <center>
+      <VBox alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
+         <Label id="text" alignment="CENTER" text="Sign In" textAlignment="CENTER" textFill="#031d20">
+            <font>
+               <Font size="44.0" />
+            </font>
+         </Label>
+         <Label id="display" fx:id="display" alignment="CENTER" prefHeight="17.0" prefWidth="214.0" textAlignment="CENTER" />
+         <HBox alignment="CENTER" spacing="10.0">
+            <ImageView fitHeight="43.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@../media/Person.png" />
+            </ImageView>
+            <TextField id="username" fx:id="username" prefHeight="43.0" prefWidth="243.0" promptText="Username" />
+         </HBox>
+         <HBox alignment="CENTER" spacing="10.0">
+            <ImageView fitHeight="43.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@../media/Password.png" />
+            </ImageView>
+            <Group>
+               <PasswordField id="passwordHide" fx:id="passwordHide" prefHeight="43.0" prefWidth="243.0" promptText="Password" />
+               <TextField id="passwordShown" fx:id="passwordShown" prefHeight="43.0" prefWidth="200.0" promptText="Password" visible="false" />
+               <ImageView id="toggleIcon" fx:id="toggleIcon" disable="true" fitHeight="28.0" fitWidth="39.0" layoutX="200.0" layoutY="12.0" onMouseClicked="#togglePassword" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../media/Show_Password.png" />
+               </ImageView>
+            </Group>
+         </HBox>
+         <Button id="button" mnemonicParsing="false" onAction="#login" prefHeight="54.0" prefWidth="128.0" text="Login" textFill="WHITE" />
+         <Hyperlink id="text" onAction="#signUP" text="Don't have an account? Click HERE!" textFill="#031d20">
+            <padding>
+               <Insets bottom="20.0" top="20.0" />
+            </padding>
+         </Hyperlink>
+      </VBox>
+   </center>
+   <left>
+      <VBox id="gradient" alignment="TOP_CENTER" spacing="30.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+         <ImageView fitHeight="233.0" fitWidth="260.0">
+            <Image url="@../media/Journey.png" />
+         </ImageView>
+         <Line endX="100.0" startX="-100.0" stroke="WHITE" />
+         <Label id="text" graphicTextGap="15.0" prefWidth="266.0" text="Plan your Wisconsin visit today!" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <font>
+               <Font size="39.0" />
+            </font>
+         </Label>
+      </VBox>
+   </left>
+</BorderPane>

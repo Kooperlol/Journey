@@ -1,0 +1,23 @@
+@font-face {
+    font-family: "Lavigne";
+    src: url('../fonts/Lavigne.ttf');
+}
+
+#button {
+    -fx-background-color: #1876FF;
+    -fx-background-radius: 50px;
+    -fx-font-family: "Lavigne";
+}
+
+#button:hover {
+    -fx-background-color: #183CFF;
+    -fx-background-radius: 50px;
+    -fx-font-family: "Lavigne";
+}
+
+#button_selected {
+    -fx-background-color: #183CFF;
+    -fx-background-radius: 50px;
+    -fx-font-family: "Lavigne";
+}
+
