@@ -1,18 +1,18 @@
-package me.kooper.fbla.api.location;
+package me.kooper.fbla.models;
 
 import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 @Getter
-public class LocationModel {
+public class Location {
 
     // data that will be retrieved and stored from the JSON Object
     private final double lon, lat;
     private final String state;
 
     // constructor that is given the json object from LocationConnection and turns it into a class to be utilized easily
-    public LocationModel(JSONObject data) {
+    public Location(JSONObject data) {
         // features array
         JSONArray features = new JSONArray(data.getJSONArray("features").toString());
 

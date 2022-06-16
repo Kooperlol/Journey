@@ -10,13 +10,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import lombok.experimental.Tolerate;
 import me.kooper.fbla.App;
-import me.kooper.fbla.api.location.LocationConnection;
-import me.kooper.fbla.api.location.LocationModel;
-import me.kooper.fbla.api.place.Attributes;
-import me.kooper.fbla.api.place.PlaceConnection;
-import me.kooper.fbla.api.place.PlaceModel;
+import me.kooper.fbla.api.LocationAPI;
+import me.kooper.fbla.models.Location;
+import me.kooper.fbla.models.Attributes;
+import me.kooper.fbla.api.PlaceAPI;
+import me.kooper.fbla.models.Place;
 import me.kooper.fbla.util.LogUtil;
 import org.controlsfx.control.CheckComboBox;
 
@@ -28,7 +27,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
 
 public class BrowseLocations implements Initializable {
 
@@ -41,21 +39,21 @@ public class BrowseLocations implements Initializable {
     @FXML CheckComboBox<String> categories, conditions;
 
     // store the output of place models after calling the API
-    private ArrayList<PlaceModel> output = new ArrayList<>();
+    private ArrayList<Place> output = new ArrayList<>();
 
     // get the categories and conditions list from the attributes class
-    private final HashMap<String, String> categoryList = new Attributes().getCategories();
-    private final HashMap<String, String> conditionsList = new Attributes().getConditions();
+    private final HashMap<String, String> CATEGORYLIST = new Attributes().getCATEGORIES();
+    private final HashMap<String, String> CONDITIONSLIST = new Attributes().getCONDITIONS();
 
     // switch to saved locations page
     @FXML
-    public void openSavedLocations() throws IOException {
+    public void openSavedLocations() {
         App.setRoot("userinterface/SavedLocations");
     }
 
     // switch to my reviews page
     @FXML
-    public void openMyReviews() throws IOException {
+    public void openMyReviews() {
         App.setRoot("userinterface/MyReviews");
     }
 
@@ -63,10 +61,10 @@ public class BrowseLocations implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // configure categories combo box
-        categories.getItems().addAll(categoryList.keySet());
+        categories.getItems().addAll(CATEGORYLIST.keySet());
 
         // configure conditions combo box
-        conditions.getItems().addAll(conditionsList.keySet());
+        conditions.getItems().addAll(CONDITIONSLIST.keySet());
 
         // configure radius combo box
         radius.getItems().addAll(3, 5, 10, 15, 20, 25, 30);
@@ -98,7 +96,7 @@ public class BrowseLocations implements Initializable {
      Called by clicking the 'Go' button */
     @FXML
     public void searchLocations() {
-        LogUtil.getLogger().log(Level.INFO, "Searching...");
+        LogUtil.LOGGER.info( "Searching...");
 
         // clear old search outputs
         locations.getItems().clear();
@@ -112,17 +110,17 @@ public class BrowseLocations implements Initializable {
         threadPool.execute(() -> {
             // get the cities lon and lat for the Places API
             if (locationSearch.getText().equals("")) {
-                LogUtil.getLogger().log(Level.INFO, "City not filled in so ignoring search request");
+                LogUtil.LOGGER.info( "City not filled in so ignoring search request");
                 Platform.runLater(() -> searching.setVisible(false));
                 return;
             }
-            LocationConnection city = new LocationConnection(locationSearch.getText());
-            LocationModel cityInfo = new LocationModel(city.getData());
+            LocationAPI city = new LocationAPI(locationSearch.getText());
+            Location cityInfo = new Location(city.getData());
 
             // Check if the location is actually within Wisconsin
             if (!(cityInfo.getState().equals("Wisconsin"))) {
                 Platform.runLater(() -> locations.getItems().add("The specified city is not within Wisconsin."));
-                LogUtil.getLogger().log(Level.INFO, "Location user wants to search is not within Wisconsin.");
+                LogUtil.LOGGER.info( "Location user wants to search is not within Wisconsin.");
                 Platform.runLater(() -> searching.setVisible(false));
                 return;
             }
@@ -131,9 +129,9 @@ public class BrowseLocations implements Initializable {
             ObservableList<String> categoriesInput = categories.getCheckModel().getCheckedItems();
             StringBuilder categoriesOutput;
             if (!categoriesInput.isEmpty()) {
-                categoriesOutput = new StringBuilder(categoryList.get(categoriesInput.get(0)));
+                categoriesOutput = new StringBuilder(CATEGORYLIST.get(categoriesInput.get(0)));
                 for (int i = 0; i < categoriesInput.size()-1; i++) {
-                    categoriesOutput.append(",").append(categoryList.get(categoriesInput.get(i + 1)));
+                    categoriesOutput.append(",").append(CATEGORYLIST.get(categoriesInput.get(i + 1)));
                 }
             } else {
                 categoriesOutput = new StringBuilder("building");
@@ -143,9 +141,9 @@ public class BrowseLocations implements Initializable {
             ObservableList<String> conditionsInput = conditions.getCheckModel().getCheckedItems();
             StringBuilder conditionsOutput;
             if (!conditionsInput.isEmpty()) {
-                conditionsOutput = new StringBuilder(conditionsList.get(conditionsInput.get(0)));
+                conditionsOutput = new StringBuilder(CONDITIONSLIST.get(conditionsInput.get(0)));
                 for (int i = 0; i < conditionsInput.size()-1; i++) {
-                    conditionsOutput.append(",").append(conditionsList.get(conditionsInput.get(i + 1)));
+                    conditionsOutput.append(",").append(CONDITIONSLIST.get(conditionsInput.get(i + 1)));
                 }
             } else {
                 conditionsOutput = new StringBuilder("named");
@@ -153,7 +151,7 @@ public class BrowseLocations implements Initializable {
 
             /* Create Place Connection that initializes a connection with the provided specifications
              If some are not specified it will set them to default values */
-            PlaceConnection placeConnection = new PlaceConnection(
+            PlaceAPI placeConnection = new PlaceAPI(
                 categoriesOutput.toString(),
                 conditionsOutput.toString(),
                 cityInfo.getLon(),
@@ -163,20 +161,20 @@ public class BrowseLocations implements Initializable {
             );
 
             // Adds all places to list view to display to the user
-            for (PlaceModel place : placeConnection.getPlaces()) {
-                Platform.runLater(() -> locations.getItems().add(place.getName()));
+            for (Place place : placeConnection.getPLACES()) {
+                Platform.runLater(() -> locations.getItems().add(place.getNAME()));
             }
 
             // set output to the places returned from API request
-            output = placeConnection.getPlaces();
+            output = placeConnection.getPLACES();
 
             // If no locations are found from the search it will provoke a message
             if (locations.getItems().isEmpty()) {
                 Platform.runLater(() -> locations.getItems().add("No results found! Try adjusting your specifications."));
-                LogUtil.getLogger().log(Level.INFO, "No results found within search.");
+                LogUtil.LOGGER.info( "No results found within search.");
             }
 
-            LogUtil.getLogger().log(Level.INFO, "Successfully ran search; output has been fully updated!");
+            LogUtil.LOGGER.info( "Successfully ran search; output has been fully updated!");
             Platform.runLater(() -> searching.setVisible(false));
         });
     }
@@ -185,28 +183,28 @@ public class BrowseLocations implements Initializable {
      Called by clicking the 'View Location' button */
     @FXML
     public void openLocation(ActionEvent event) throws IOException {
-        LogUtil.getLogger().log(Level.INFO, "Open location button clicked; checking if user selected a location...");
+        LogUtil.LOGGER.info( "Open location button clicked; checking if user selected a location...");
         // check if something is selected
         if (!locations.getSelectionModel().isEmpty()) {
-            LogUtil.getLogger().log(Level.INFO, "Opening location's page...");
+            LogUtil.LOGGER.info( "Opening location's page...");
 
             // Gets place model from selected index out of hashmap
-            PlaceModel selected = output.get(locations.getSelectionModel().getSelectedIndex());
+            Place selected = output.get(locations.getSelectionModel().getSelectedIndex());
 
             // Load location template controller and pass the place model for content
-            LogUtil.getLogger().log(Level.INFO, "Getting Location Template FXML and passing location model into the controller:");
+            LogUtil.LOGGER.info( "Getting Location Template FXML and passing location model into the controller:");
             FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/userinterface/LocationTemplate.fxml"));
             Parent root = loader.load();
             LocationTemplate locationTemplate = loader.getController();
             locationTemplate.init(selected);
-            LogUtil.getLogger().log(Level.INFO, "Done!");
+            LogUtil.LOGGER.info( "Done!");
 
             // Get the stage from the action and set the scene
-            LogUtil.getLogger().log(Level.INFO, "Getting stage to load content on:");
+            LogUtil.LOGGER.info( "Getting stage to load content on:");
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
             stage.show();
-            LogUtil.getLogger().log(Level.INFO, this.getClass().getName() + ": Done and shown to user!");
+            LogUtil.LOGGER.info( this.getClass().getName() + ": Done and shown to user!");
         }
     }
 

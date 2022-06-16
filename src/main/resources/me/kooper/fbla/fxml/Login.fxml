@@ -3,11 +3,13 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -15,6 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <BorderPane id="background" prefHeight="657.0" prefWidth="1149.0" style="-fx-margin: auto;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.kooper.fbla.controllers.Login">
     <stylesheets>
@@ -47,16 +50,19 @@
                </ImageView>
             </Group>
          </HBox>
-         <Button id="button" mnemonicParsing="false" onAction="#login" prefHeight="54.0" prefWidth="128.0" text="Login" textFill="WHITE" />
+         <Button id="button" mnemonicParsing="false" onAction="#login" prefHeight="54.0" prefWidth="124.0" text="Login" textFill="WHITE" />
          <Hyperlink id="text" onAction="#signUP" text="Don't have an account? Click HERE!" textFill="#031d20">
             <padding>
                <Insets bottom="20.0" top="20.0" />
             </padding>
+            <VBox.margin>
+               <Insets top="50.0" />
+            </VBox.margin>
          </Hyperlink>
       </VBox>
    </center>
    <left>
-      <VBox id="gradient" alignment="TOP_CENTER" spacing="30.0" BorderPane.alignment="CENTER">
+      <VBox id="gradient" alignment="TOP_CENTER" prefHeight="657.0" prefWidth="391.0" spacing="30.0" BorderPane.alignment="CENTER">
          <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
@@ -64,11 +70,28 @@
             <Image url="@../media/Journey.png" />
          </ImageView>
          <Line endX="100.0" startX="-100.0" stroke="WHITE" />
-         <Label id="text" graphicTextGap="15.0" prefWidth="266.0" text="Plan your Wisconsin visit today!" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+         <Label id="text" graphicTextGap="15.0" text="Plan your Wisconsin visit today!" textAlignment="CENTER" textFill="WHITE" wrapText="true">
             <font>
                <Font size="39.0" />
             </font>
          </Label>
+         <Line endX="100.0" startX="-100.0" stroke="WHITE" />
+         <Accordion id="FAQ">
+           <panes>
+             <TitledPane animated="false" prefHeight="51.0" prefWidth="327.0" text="How do I login?">
+                  <content>
+                     <Text fill="#96ffff" strokeType="OUTSIDE" strokeWidth="0.0" text="To login, simply put in your username and password in the corresponding boxes. Then, click the login button below. If you don't have an account click the sign up button on the bottom of your screen!" textAlignment="CENTER" wrappingWidth="359.59521484375" />
+                  </content>
+               </TitledPane>
+             <TitledPane animated="false" text="How do I create an account?">
+                  <content>
+                     <Text fill="#96ffff" strokeType="OUTSIDE" strokeWidth="0.0" text="To create an account, click the &quot;Don't have an account? Click HERE!&quot; hyperlink located below the login button." textAlignment="CENTER" wrappingWidth="358.77880859375" />
+                  </content></TitledPane>
+           </panes>
+            <VBox.margin>
+               <Insets top="5.0" />
+            </VBox.margin>
+         </Accordion>
       </VBox>
    </left>
 </BorderPane>

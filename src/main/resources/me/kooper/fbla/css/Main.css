@@ -19,6 +19,37 @@
     -fx-text-fill: white;
 }
 
+#FAQ {
+    -fx-box-border: transparent;
+}
+
+#FAQ .titled-pane > .title > .arrow-button > .arrow {
+    -fx-opacity: 0;
+    -fx-effect: null;
+}
+
+#FAQ .titled-pane > *.content {
+    -fx-background-color: #1876FF;
+    -fx-font-family: "Lavigne";
+    -fx-padding: 5px;
+}
+
+#FAQ .titled-pane:hover {
+    -fx-text-fill: #21e4e4;
+}
+
+#FAQ .titled-pane:expanded {
+    -fx-text-fill: #21e4e4;
+}
+
+#FAQ .titled-pane > .title {
+    -fx-background-color: #1876FF;
+    -fx-font-family: "Lavigne";
+    -fx-padding: 1px;
+    -fx-font-size: 12pt;
+    -fx-alignment: center;
+}
+
 #error {
     -fx-background-radius: 70px;
     -fx-padding: 10px;

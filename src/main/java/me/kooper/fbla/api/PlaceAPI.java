@@ -1,7 +1,8 @@
-package me.kooper.fbla.api.place;
+package me.kooper.fbla.api;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
+import me.kooper.fbla.models.Place;
 import me.kooper.fbla.util.LogUtil;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -11,22 +12,21 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.logging.Level;
 
 @Getter
-public class PlaceConnection {
+public class PlaceAPI {
 
     // stores a places around an area in the PlaceModel class as an ArrayList
-    private final ArrayList<PlaceModel> places = new ArrayList<>();
+    private final ArrayList<Place> PLACES = new ArrayList<>();
 
     /* Constructor that calls api and gets all places around the specified location with the specified attributes
     Uses Geoapify (Places API) - https://www.geoapify.com/places-api */
-    public PlaceConnection(String categories, String conditions,  double lon, double lat, double radius, String limit) {
+    public PlaceAPI(String categories, String conditions, double lon, double lat, double radius, String limit) {
         // initialize environmental file to retrieve API key during request
         Dotenv dotenv = Dotenv.load();
 
         // build request to API from specified parameters
-        LogUtil.getLogger().log(Level.INFO, "Sending request to get places around " + lon + " " + lat + " in a radius of " + radius + " km that fits " + categories + " and " + conditions + " and returns a limit of " + limit + " places:");
+        LogUtil.LOGGER.info("Sending request to get places around " + lon + " " + lat + " in a radius of " + radius + " km that fits " + categories + " and " + conditions + " and returns a limit of " + limit + " places:");
         long duration = System.currentTimeMillis();
         OkHttpClient client = new OkHttpClient();
         try {
@@ -41,7 +41,7 @@ public class PlaceConnection {
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();
 
-            LogUtil.getLogger().log(Level.INFO, "Request took: " + (System.currentTimeMillis() - duration) + " ms.");
+            LogUtil.LOGGER.info( "Request took: " + (System.currentTimeMillis() - duration) + " ms.");
 
             // response code 200 means that the response is successful otherwise throw an error
             if (response.code() == 200) {
@@ -51,21 +51,21 @@ public class PlaceConnection {
                 // iterate through each location in response
                 for (Object object : json.getJSONArray("features")) {
                     // create a pojo from the json to easily access information
-                    PlaceModel p = new PlaceModel(object);
+                    Place p = new Place(object);
 
                     /* assert the location is within Wisconsin and if the place has a name
                     then if both are true add to the places list */
-                    if (p.getState().equals("Wisconsin") && (!p.getName().equals(""))) {
-                        places.add(p);
+                    if (p.getSTATE().equals("Wisconsin") && (!p.getNAME().equals(""))) {
+                        PLACES.add(p);
                     }
                 }
                 Objects.requireNonNull(response.body()).close();
-                LogUtil.getLogger().log(Level.INFO, "Successfully found and stored " + getPlaces().size() + " locations.");
+                LogUtil.LOGGER.info( "Successfully found and stored " + this.getPLACES().size() + " locations.");
             } else {
-                LogUtil.getLogger().log(Level.SEVERE, "Request error " + response.code());
+                LogUtil.LOGGER.severe( "Request error " + response.code());
             }
         } catch (Exception e) {
-            LogUtil.getLogger().log(Level.SEVERE, "Error: ", e);
+            LogUtil.LOGGER.severe( "Error: " + e);
         }
     }
 

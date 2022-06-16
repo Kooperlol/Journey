@@ -9,16 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import me.kooper.fbla.App;
-import me.kooper.fbla.api.place.PlaceModel;
+import me.kooper.fbla.models.Place;
 import me.kooper.fbla.util.LogUtil;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 
 public class SavedLocations implements Initializable {
 
@@ -26,7 +23,7 @@ public class SavedLocations implements Initializable {
     @FXML ListView<String> locationsViewer;
 
     // stores the saved locations as place models
-    private final ArrayList<PlaceModel> output = new ArrayList<>();
+    private final ArrayList<Place> OUTPUT = new ArrayList<>();
 
     // switch to browse locations page
     @FXML
@@ -53,98 +50,91 @@ public class SavedLocations implements Initializable {
     /* Reads the saved locations file by line and takes the json object and creates place model with it.
     Then, with the place model it adds it to an array list called output and to the locations view display. */
     public void refresh() throws IOException {
-        LogUtil.getLogger().log(Level.INFO, "Refreshing saved locations...");
+        LogUtil.LOGGER.info( "Refreshing saved locations...");
 
         // clear old data
         locationsViewer.getItems().clear();
-        output.clear();
+        OUTPUT.clear();
 
-        LogUtil.getLogger().log(Level.INFO, "Checking if local data directory exists; if not create one...");
-        // looks to see if directory of journey exists; if not creates it and the saved-locations file too
-        File file = new File(System.getProperty("user.home") + "/journey/saved-locations.txt");
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-            Files.createFile(Path.of(file.getAbsolutePath()));
-            LogUtil.getLogger().log(Level.INFO, "Created local data directory at " + file.getAbsolutePath());
-        }
+        // get or create file for saved locations
+        File file = App.getStorageManager().makeFile("saved-locations.txt");
 
         // reads data within saved-locations.txt and converts json object to pojo of PlaceModel. Then, the location is added to the viewable list.
-        LogUtil.getLogger().log(Level.INFO, "Reading " + file.getAbsolutePath() + " for user's saved locations:");
+        LogUtil.LOGGER.info( "Reading " + file.getAbsolutePath() + " for user's saved locations:");
         BufferedReader reader = new BufferedReader(new FileReader(file));
         for (String data = reader.readLine(); data != null; data = reader.readLine()) {
-            PlaceModel model = new PlaceModel(data);
-            locationsViewer.getItems().add(model.getName());
-            output.add(model);
+            Place model = new Place(data);
+            locationsViewer.getItems().add(model.getNAME());
+            OUTPUT.add(model);
         }
-        LogUtil.getLogger().log(Level.INFO, "Updated saved-locations table!");
+        LogUtil.LOGGER.info( "Updated saved-locations table!");
     }
 
     /* Open selected location from view list in a new scene
      Called by clicking the 'View Location' button */
     @FXML
     public void openLocation(ActionEvent event) throws IOException {
-        LogUtil.getLogger().log(Level.INFO, "Open location button clicked; checking user selected a location...");
+        LogUtil.LOGGER.info( "Open location button clicked; checking user selected a location...");
 
         // check if something is selected
         if (!locationsViewer.getSelectionModel().isEmpty()) {
             // Gets place model from selected index out of hashmap
-            PlaceModel selected = output.get(locationsViewer.getSelectionModel().getSelectedIndex());
+            Place selected = OUTPUT.get(locationsViewer.getSelectionModel().getSelectedIndex());
 
-            LogUtil.getLogger().log(Level.INFO, "Loading Location Template FXML and passing location into controller...");
+            LogUtil.LOGGER.info( "Loading Location Template FXML and passing location into controller...");
             // Load location template controller and pass the place model for content
             FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/userinterface/LocationTemplate.fxml"));
             Parent root = loader.load();
             LocationTemplate locationTemplate = loader.getController();
             locationTemplate.init(selected);
-            LogUtil.getLogger().log(Level.INFO, "Loaded!");
+            LogUtil.LOGGER.info( "Loaded!");
 
-            LogUtil.getLogger().log(Level.INFO, "Getting stage to load location template onto...");
+            LogUtil.LOGGER.info( "Getting stage to load location template onto...");
             // Get the stage from the action and set the scene
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
             stage.show();
-            LogUtil.getLogger().log(Level.INFO, "Done; stage shown to user!");
+            LogUtil.LOGGER.info( "Done; stage shown to user!");
         }
     }
 
     // unsave selected location
     public void unsaveLocation() throws IOException {
-        LogUtil.getLogger().log(Level.INFO, "Unsave location button clicked; checking user selected a location...");
+        LogUtil.LOGGER.info( "Unsave location button clicked; checking user selected a location...");
 
         // check if something is selected
         if (!locationsViewer.getSelectionModel().isEmpty()) {
             // Gets place model from selected index out of hashmap
-            PlaceModel selected = output.get(locationsViewer.getSelectionModel().getSelectedIndex());
+            Place selected = OUTPUT.get(locationsViewer.getSelectionModel().getSelectedIndex());
 
-            // get the file from the resources directory
-            LogUtil.getLogger().log(Level.INFO, "Getting file from " + System.getProperty("user.home") + "/journey/saved-locations.txt");
-            File file = new File(System.getProperty("user.home") + "/journey/saved-locations.txt");
+            // get or create file for saved locations and read it
+            File file = App.getStorageManager().makeFile("saved-locations.txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
 
             // create string builder from the file contents ignoring the line to remove
-            LogUtil.getLogger().log(Level.INFO, "Writing all file data to a string builder except for the data to remove...");
+            LogUtil.LOGGER.info( "Writing all file data to a string builder except for the data to remove...");
             StringBuilder stringBuilder = new StringBuilder();
             String currentLine;
-            LogUtil.getLogger().log(Level.INFO, System.getProperty("line.separator"));
+            LogUtil.LOGGER.info( System.getProperty("line.separator"));
             while((currentLine = reader.readLine()) != null) {
-                if (currentLine.equals(selected.getData())) continue;
+                if (currentLine.equals(selected.getDATA())) continue;
                 stringBuilder.append(currentLine).append(System.getProperty("line.separator"));
             }
             reader.close();
-            LogUtil.getLogger().log(Level.INFO, "Done!");
+            LogUtil.LOGGER.info( "Done!");
 
             // delete file contents
-            LogUtil.getLogger().log(Level.INFO, "Deleting all file data at " + file.getAbsolutePath());
+            LogUtil.LOGGER.info( "Deleting all file data at " + file.getAbsolutePath());
             PrintWriter pw = new PrintWriter(file);
             pw.close();
-            LogUtil.getLogger().log(Level.INFO, "Deleted!");
+            LogUtil.LOGGER.info( "Deleted!");
 
             // write new contents from string builder
-            LogUtil.getLogger().log(Level.INFO, "Writing new contents...");
+            LogUtil.LOGGER.info( "Writing new contents...");
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
             writer.append(stringBuilder.toString());
             writer.close();
-            LogUtil.getLogger().log(Level.INFO, "Done; file updated and location removed, now sending refresh request for saved locations!");
+            LogUtil.LOGGER.info( "Done; file updated and location removed, now sending refresh request for saved locations!");
 
             // refresh the editor
             refresh();

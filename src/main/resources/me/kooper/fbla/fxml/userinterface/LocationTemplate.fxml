@@ -2,24 +2,29 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.Rating?>
 
-<BorderPane id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="444.0" prefWidth="727.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.kooper.fbla.controllers.userinterface.LocationTemplate">
+<BorderPane id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="657.0" prefWidth="1149.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.kooper.fbla.controllers.userinterface.LocationTemplate">
    <stylesheets>
       <URL value="@../../css/Button.css" />
       <URL value="@../../css/Main.css" />
    </stylesheets>
    <left>
-      <VBox id="gradient" alignment="TOP_CENTER" maxWidth="200.0" spacing="5.0" BorderPane.alignment="CENTER">
+      <VBox id="gradient" alignment="TOP_CENTER" maxWidth="296.0" prefHeight="444.0" prefWidth="296.0" spacing="5.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
@@ -36,20 +41,54 @@
                <Font size="19.0" />
             </font>
          </Label>
-         <Button id="button" graphicTextGap="10.0" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addReview" prefHeight="37.0" prefWidth="174.0" text="Add Review" textFill="WHITE">
+         <Line endX="100.0" startX="-100.0" stroke="WHITE">
+            <VBox.margin>
+               <Insets bottom="15.0" top="15.0" />
+            </VBox.margin>
+         </Line>
+         <Button id="button" graphicTextGap="10.0" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#addReview" prefHeight="68.0" prefWidth="451.0" text="Add Review" textFill="WHITE">
             <graphic>
                <ImageView fitHeight="24.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                   <Image url="@../../media/Add_Document.png" />
                </ImageView>
             </graphic>
          </Button>
-         <Button id="button" graphicTextGap="10.0" layoutX="10.0" layoutY="49.0" mnemonicParsing="false" onAction="#saveLocation" prefHeight="37.0" prefWidth="174.0" text="Save Location" textFill="WHITE">
+         <Button id="button" graphicTextGap="10.0" layoutX="10.0" layoutY="49.0" mnemonicParsing="false" onAction="#saveLocation" prefHeight="68.0" prefWidth="451.0" text="Save Location" textFill="WHITE">
             <graphic>
                <ImageView fitHeight="24.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                   <Image url="@../../media/Cloud.png" />
                </ImageView>
             </graphic>
          </Button>
+         <Line endX="100.0" startX="-100.0" stroke="WHITE">
+            <VBox.margin>
+               <Insets bottom="15.0" top="15.0" />
+            </VBox.margin>
+         </Line>
+         <Accordion id="FAQ">
+            <panes>
+               <TitledPane animated="false" text="What is this page?">
+                  <content>
+                     <Text fill="#96ffff" strokeType="OUTSIDE" strokeWidth="0.0" text="This page displays the location's information such as its name, ADDRESS, and reviews." textAlignment="CENTER" wrappingWidth="359.59521484375" />
+                  </content>
+               </TitledPane>
+               <TitledPane animated="false" text="How do i leave a review?">
+                  <content>
+                     <Text fill="#96ffff" strokeType="OUTSIDE" strokeWidth="0.0" text="To a leave a review, click the &quot;Add review&quot; button and follow the prompted instructions." textAlignment="CENTER" wrappingWidth="358.77880859375" />
+                  </content>
+               </TitledPane>
+               <TitledPane animated="false" text="How do i save the location?">
+                  <content>
+                     <Text fill="#96ffff" strokeType="OUTSIDE" strokeWidth="0.0" text="To save the location, click the &quot;save location&quot; button." textAlignment="CENTER" wrappingWidth="358.77880859375" />
+                  </content>
+               </TitledPane>
+               <TitledPane animated="false" text="How do i go back to browsing locations?">
+                  <content>
+                     <Text fill="#96ffff" strokeType="OUTSIDE" strokeWidth="0.0" text="To go back to browsing, click the hyperlink under the reviews called &quot;Go back to Browsing Locations&quot;." textAlignment="CENTER" wrappingWidth="358.77880859375" />
+                  </content>
+               </TitledPane>
+            </panes>
+         </Accordion>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
@@ -63,6 +102,13 @@
                   <Font size="47.0" />
                </font>
             </Text>
+            <Label fx:id="totalReviews" />
+            <HBox fx:id="ratingStats" alignment="CENTER" spacing="10.0">
+               <children>
+                  <Label fx:id="loading11" text="Overall Rating:" />
+                  <Rating fx:id="overallRating" onMouseClicked="#updateRating" rating="0.0" />
+               </children>
+            </HBox>
             <Label fx:id="loading" text="Loading..." />
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="471.5" style="-fx-background-color: transparent;" vbarPolicy="NEVER">
                <content>
@@ -79,7 +125,10 @@
                <VBox.margin>
                   <Insets />
                </VBox.margin></Hyperlink>
-            <Label fx:id="feedback" wrapText="true" />
+            <Label fx:id="feedback" wrapText="true">
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin></Label>
          </children>
          <BorderPane.margin>
             <Insets />
