@@ -39,6 +39,13 @@
             <version>4.10.0-RC1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.5.13.3</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.json/json JSON EDITING -->
         <dependency>
             <groupId>org.json</groupId>

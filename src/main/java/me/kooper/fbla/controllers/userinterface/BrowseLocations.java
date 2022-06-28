@@ -12,19 +12,19 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import me.kooper.fbla.App;
 import me.kooper.fbla.api.LocationAPI;
-import me.kooper.fbla.models.Location;
-import me.kooper.fbla.models.Attributes;
 import me.kooper.fbla.api.PlaceAPI;
+import me.kooper.fbla.models.Attributes;
+import me.kooper.fbla.models.Location;
 import me.kooper.fbla.models.Place;
 import me.kooper.fbla.util.LogUtil;
 import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.control.textfield.TextFields;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -68,6 +68,15 @@ public class BrowseLocations implements Initializable {
 
         // configure radius combo box
         radius.getItems().addAll(3, 5, 10, 15, 20, 25, 30);
+
+        // search suggestions (auto completion)
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("src/main/resources/me/kooper/fbla/misc/cities.txt"));
+            List<String> cities = bufferedReader.lines().toList();
+            TextFields.bindAutoCompletion(locationSearch, cities);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // add tooltips for help
         Tooltip cityTip = new Tooltip("Enter the city you would like to search for places around.");
@@ -118,7 +127,7 @@ public class BrowseLocations implements Initializable {
             Location cityInfo = new Location(city.getData());
 
             // Check if the location is actually within Wisconsin
-            if (!(cityInfo.getState().equals("Wisconsin"))) {
+            if (!cityInfo.getSTATE().equals("Wisconsin")) {
                 Platform.runLater(() -> locations.getItems().add("The specified city is not within Wisconsin."));
                 LogUtil.LOGGER.info( "Location user wants to search is not within Wisconsin.");
                 Platform.runLater(() -> searching.setVisible(false));
@@ -154,25 +163,25 @@ public class BrowseLocations implements Initializable {
             PlaceAPI placeConnection = new PlaceAPI(
                 categoriesOutput.toString(),
                 conditionsOutput.toString(),
-                cityInfo.getLon(),
-                cityInfo.getLat(),
+                cityInfo.getLON(),
+                cityInfo.getLAT(),
                 radius.getSelectionModel().isEmpty() ? 48280.2 : radius.getValue() * 1609.34,
                 !Objects.equals(limit.getText(), "") && Integer.parseInt(limit.getText()) > 0 ? limit.getText() : "500"
             );
 
             // Adds all places to list view to display to the user
-            for (Place place : placeConnection.getPLACES()) {
-                Platform.runLater(() -> locations.getItems().add(place.getNAME()));
-            }
-
-            // set output to the places returned from API request
-            output = placeConnection.getPLACES();
-
-            // If no locations are found from the search it will provoke a message
-            if (locations.getItems().isEmpty()) {
+            if (!placeConnection.getPLACES().isEmpty()) {
+                for (Place place : placeConnection.getPLACES()) {
+                    Platform.runLater(() -> locations.getItems().add(place.getNAME()));
+                }
+            } else {
+                // If no locations are found from the search it will provoke a message
                 Platform.runLater(() -> locations.getItems().add("No results found! Try adjusting your specifications."));
                 LogUtil.LOGGER.info( "No results found within search.");
             }
+            
+            // set output to the places returned from API request
+            output = placeConnection.getPLACES();
 
             LogUtil.LOGGER.info( "Successfully ran search; output has been fully updated!");
             Platform.runLater(() -> searching.setVisible(false));

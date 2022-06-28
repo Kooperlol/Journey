@@ -1,5 +1,9 @@
 package me.kooper.fbla.controllers.userinterface;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +16,7 @@ import me.kooper.fbla.App;
 import me.kooper.fbla.models.Place;
 import me.kooper.fbla.util.LogUtil;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;

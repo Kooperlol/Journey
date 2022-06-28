@@ -8,30 +8,27 @@ import org.json.JSONObject;
 public class Location {
 
     // data that will be retrieved and stored from the JSON Object
-    private final double lon, lat;
-    private final String state;
+    private final double LON, LAT;
+    private final String STATE;
 
     // constructor that is given the json object from LocationConnection and turns it into a class to be utilized easily
     public Location(JSONObject data) {
         // features array
-        JSONArray features = new JSONArray(data.getJSONArray("features").toString());
+        JSONArray features = data.getJSONArray("features");
 
         // get first location
-        JSONObject first = new JSONObject(features.get(0).toString());
-
-        // geometry properties
-        JSONObject geo = new JSONObject(first.getJSONObject("geometry").toString());
+        JSONObject first = features.getJSONObject(0);
 
         // set lon & lat from geo
-        JSONArray coordinates = new JSONArray(geo.getJSONArray("coordinates").toString());
-        lon = coordinates.optDouble(0);
-        lat = coordinates.optDouble(1);
+        JSONArray coordinates = first.getJSONObject("geometry").getJSONArray("coordinates");
+        LON = coordinates.optDouble(0);
+        LAT = coordinates.optDouble(1);
 
         // get properties
-        JSONObject properties = new JSONObject(first.getJSONObject("properties").toString());
+        JSONObject properties = first.getJSONObject("properties");
 
         // get state from properties
-        state = properties.optString("state");
+        STATE = properties.optString("state");
     }
 
 }

@@ -1,13 +1,19 @@
 package me.kooper.fbla.models;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Attributes {
 
     /* Stores categories and conditions with their formatted name as
     the key and API reference for the value */
-    private final HashMap<String, String> CATEGORIES = new HashMap<>();
-    private final HashMap<String, String> CONDITIONS = new HashMap<>();
+    private final HashMap<String, String> CATEGORIES;
+    private final HashMap<String, String> CONDITIONS;
+
+    public Attributes() {
+        CATEGORIES = new LinkedHashMap<>();
+        CONDITIONS = new LinkedHashMap<>();
+    }
 
     // request to get the conditions and store them in its hashmap
     public HashMap<String, String> getCONDITIONS() {

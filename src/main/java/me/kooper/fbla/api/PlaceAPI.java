@@ -17,11 +17,13 @@ import java.util.Objects;
 public class PlaceAPI {
 
     // stores a places around an area in the PlaceModel class as an ArrayList
-    private final ArrayList<Place> PLACES = new ArrayList<>();
+    private final ArrayList<Place> PLACES;
 
     /* Constructor that calls api and gets all places around the specified location with the specified attributes
     Uses Geoapify (Places API) - https://www.geoapify.com/places-api */
     public PlaceAPI(String categories, String conditions, double lon, double lat, double radius, String limit) {
+        PLACES = new ArrayList<>();
+
         // initialize environmental file to retrieve API key during request
         Dotenv dotenv = Dotenv.load();
 
@@ -60,7 +62,7 @@ public class PlaceAPI {
                     }
                 }
                 Objects.requireNonNull(response.body()).close();
-                LogUtil.LOGGER.info( "Successfully found and stored " + this.getPLACES().size() + " locations.");
+                LogUtil.LOGGER.info( "Successfully found and stored " + PLACES.size() + " locations.");
             } else {
                 LogUtil.LOGGER.severe( "Request error " + response.code());
             }
